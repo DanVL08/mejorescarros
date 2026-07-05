@@ -231,10 +231,10 @@
 
   .car-row{
     display:grid;
-    grid-template-columns:88px 1fr auto 28px;
+    grid-template-columns:60px 108px 1fr auto 28px;
     align-items:center;
     gap:20px;
-    padding:22px 24px;
+    padding:18px 24px;
     cursor:pointer;
     background:transparent;
     border:none;
@@ -242,6 +242,47 @@
     text-align:left;
     color:inherit;
     font-family:inherit;
+  }
+
+  /* ---------- car media / placeholder image ---------- */
+  .car-media{
+    position:relative;
+    width:108px;
+    height:72px;
+    border-radius:3px;
+    overflow:hidden;
+    background:var(--surface-2);
+    border:1px solid var(--line);
+    flex:none;
+  }
+  .car-media img{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    opacity:0;
+    transition:opacity 0.3s ease;
+  }
+  .media-fallback{
+    position:absolute;
+    inset:0;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:4px;
+    background:
+      repeating-linear-gradient(135deg, var(--surface-2) 0 8px, #202329 8px 16px);
+  }
+  .media-fallback svg{
+    width:34px;
+    height:34px;
+    stroke:var(--muted);
+    opacity:0.8;
+  }
+  .media-fallback .fallback-label{
+    display:none;
   }
   .rank{
     font-family:'JetBrains Mono', monospace;
@@ -361,8 +402,9 @@
   @media (max-width:820px){
     .hero-grid{grid-template-columns:1fr; gap:36px;}
     .gauge-wrap{order:-1; max-width:220px; margin:0 auto;}
-    .car-row{grid-template-columns:56px 1fr 22px;}
-    .car-row > .chevron{grid-column:3;}
+    .car-row{grid-template-columns:40px 76px 1fr 22px;}
+    .car-media{width:76px; height:56px;}
+    .car-row > .chevron{grid-column:4;}
   }
 </style>
 </head>
@@ -371,7 +413,7 @@
 <header>
   <div class="nav wrap">
     <div class="brand"><span class="dot"></span>Autos&nbsp;Cúspide</div>
-    <div class="nav-meta">RANKING · 10 UNIDADES · EDICIÓN 2026</div>
+    <div class="nav-meta">RANKING · 10 UNIDADES · EDICIÓN 2026 POR YAHIR VARGAS LOPEZ</div>
   </div>
 </header>
 
@@ -379,7 +421,7 @@
   <div class="wrap hero-grid">
     <div>
       <div class="eyebrow">TABLERO DE VELOCIDAD</div>
-      <h1>Los <em>diez</em><br>autos más<br>extraordinarios<br>del mundo</h1>
+      <h1>Los <em>diez</em><br>autos más<br>extraordinarios<br>del mundo por <em>Yahir Vargas López</em></h1>
       <p>Una selección de las máquinas que redefinieron lo que un automóvil puede hacer: potencia bruta, ingeniería de precisión y diseño que se volvió leyenda.</p>
       <div class="hero-stats">
         <div class="hero-stat">
@@ -439,51 +481,61 @@
 <script>
 const cars = [
   {
+    slug: "bugatti-chiron",
     brand: "Bugatti", model: "Chiron Super Sport 300+", tag: "Velocidad máxima",
     desc: "Concebido con un único objetivo: romper la barrera de los 300 mph de forma sostenida. Su W16 cuatriturbo convierte cada dato técnico en un récord.",
     specs: [["1600 CV","Potencia"],["1.85 s","0–100 km/h"],["490 km/h","Vel. máxima"],["8.0L W16","Motor"],["1995 kg","Peso"],["4","Turbos"]]
   },
   {
+    slug: "ferrari-sf90",
     brand: "Ferrari", model: "SF90 Stradale", tag: "Híbrido de pista",
     desc: "El primer Ferrari híbrido enchufable de calle. Tres motores eléctricos más un V8 biturbo entregan tracción total y una respuesta casi instantánea.",
     specs: [["1000 CV","Potencia"],["2.5 s","0–100 km/h"],["340 km/h","Vel. máxima"],["4.0L V8+3 motores","Motor"],["1570 kg","Peso"],["8vel.","Transmisión"]]
   },
   {
+    slug: "koenigsegg-jesko",
     brand: "Koenigsegg", model: "Jesko Absolut", tag: "Aerodinámica extrema",
     desc: "Diseñado por Koenigsegg puramente para velocidad terminal, sin el gran alerón de sus hermanos. Su caja Light Speed Transmission cambia de marcha en milisegundos.",
     specs: [["1600 CV","Potencia (E85)"],["2.5 s","0–100 km/h"],["480+ km/h","Vel. estimada"],["5.0L V8","Motor"],["1320 kg","Peso"],["9vel. LST","Transmisión"]]
   },
   {
+    slug: "mclaren-p1",
     brand: "McLaren", model: "P1", tag: "Icono híbrido",
     desc: "Junto al Ferrari LaFerrari y el Porsche 918, formó la trinidad híbrida que cambió la percepción de los superdeportivos para siempre.",
     specs: [["916 CV","Potencia"],["2.8 s","0–100 km/h"],["350 km/h","Vel. máxima"],["3.8L V8+motor eléc.","Motor"],["1395 kg","Peso"],["IHOC","Suspensión"]]
   },
   {
+    slug: "porsche-gt3rs",
     brand: "Porsche", model: "911 GT3 RS", tag: "Pureza atmosférica",
     desc: "Sin turbos, sin híbridos: un bóxer de altas revoluciones y un paquete aerodinámico prestado de la competición. El favorito de los puristas.",
     specs: [["525 CV","Potencia"],["3.2 s","0–100 km/h"],["296 km/h","Vel. máxima"],["4.0L Bóxer 6","Motor"],["1450 kg","Peso"],["9000","RPM máx."]]
   },
   {
+    slug: "lamborghini-revuelto",
     brand: "Lamborghini", model: "Revuelto", tag: "V12 reinventado",
     desc: "El primer Lamborghini híbrido de serie combina un V12 atmosférico con tres motores eléctricos, heredando el carácter del V12 con la eficiencia del futuro.",
     specs: [["1015 CV","Potencia"],["2.5 s","0–100 km/h"],["350 km/h","Vel. máxima"],["6.5L V12+3 motores","Motor"],["1772 kg","Peso"],["8vel. DCT","Transmisión"]]
   },
   {
+    slug: "pagani-huayra",
     brand: "Pagani", model: "Huayra", tag: "Arte y mecánica",
     desc: "Cada componente, desde los pistones de titanio hasta las palancas de cambio, está tratado como una escultura funcional. Un V12 Mercedes-AMG le da voz.",
     specs: [["730 CV","Potencia"],["3.2 s","0–100 km/h"],["370 km/h","Vel. máxima"],["6.0L V12 biturbo","Motor"],["1350 kg","Peso"],["Carbotitanio","Chasis"]]
   },
   {
+    slug: "rimac-nevera",
     brand: "Rimac", model: "Nevera", tag: "Eléctrico absoluto",
     desc: "Cuatro motores eléctricos independientes, uno por rueda, entregan una aceleración que ningún motor de combustión ha igualado hasta ahora.",
     specs: [["1914 CV","Potencia"],["1.85 s","0–100 km/h"],["412 km/h","Vel. máxima"],["4 motores eléc.","Motor"],["2150 kg","Peso"],["120 kWh","Batería"]]
   },
   {
+    slug: "astonmartin-valkyrie",
     brand: "Aston Martin", model: "Valkyrie", tag: "Fórmula 1 con matrícula",
     desc: "Desarrollado con Red Bull Racing, su V12 gira a 11,100 RPM y su piso genera carga aerodinámica comparable a la de un monoplaza.",
     specs: [["1140 CV","Potencia"],["2.5 s","0–100 km/h"],["350+ km/h","Vel. máxima"],["6.5L V12+motor eléc.","Motor"],["1030 kg","Peso"],["11100","RPM máx."]]
   },
   {
+    slug: "tesla-plaid",
     brand: "Tesla", model: "Model S Plaid", tag: "Aceleración de producción",
     desc: "Sin motor de combustión, sin escape, sin cambios de marcha audibles: solo tres motores eléctricos entregando una de las aceleraciones de serie más rápidas jamás medidas.",
     specs: [["1020 CV","Potencia"],["2.1 s","0–100 km/h"],["322 km/h","Vel. máxima"],["3 motores eléc.","Motor"],["2162 kg","Peso"],["396 km","Autonomía*"]]
@@ -501,6 +553,20 @@ cars.forEach((car, i) => {
   el.innerHTML = `
     <button class="car-row" aria-expanded="false">
       <div class="rank mono">${rankNum}</div>
+      <div class="car-media">
+        <div class="media-fallback">
+          <svg viewBox="0 0 64 32" fill="none" xmlns="http://www.w3.org/2000/svg" stroke-width="2" stroke-linejoin="round" stroke-linecap="round">
+            <path d="M6 22 L10 13 Q13 9 19 9 H41 Q47 9 50 13 L54 22"/>
+            <path d="M2 22 H62 V25 Q62 27 60 27 H4 Q2 27 2 25 Z"/>
+            <circle cx="16" cy="27" r="4"/>
+            <circle cx="48" cy="27" r="4"/>
+          </svg>
+          <span class="fallback-label">images/${car.slug}.jpg</span>
+        </div>
+        <img src="images/${car.slug}.jpg" alt="${car.brand} ${car.model}" loading="lazy"
+             onload="this.style.opacity=1; this.previousElementSibling.style.display='none';"
+             onerror="this.style.display='none';">
+      </div>
       <div class="car-id">
         <div class="brand-name">${car.brand}</div>
         <div class="model-name">${car.model}</div>
