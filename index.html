@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Los Mejores Autos del Mundo — Ranking</title>
+<meta name="description" content="Un ranking curado de los diez autos más extraordinarios jamás construidos, con sus especificaciones clave.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Work+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0A0B0D;
+    --surface:#15171B;
+    --surface-2:#1D2025;
+    --line:#2A2D33;
+    --text:#EDEBE6;
+    --muted:#82888E;
+    --accent:#E10600;
+    --accent-dim:#5c1310;
+    --gold:#C9A227;
+  }
+
+  *{box-sizing:border-box; margin:0; padding:0;}
+
+  html{scroll-behavior:smooth;}
+
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Work Sans', sans-serif;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  .mono{font-family:'JetBrains Mono', monospace;}
+
+  h1,h2,h3, .display{
+    font-family:'Rajdhani', sans-serif;
+    text-transform:uppercase;
+    letter-spacing:0.02em;
+  }
+
+  a{color:inherit;}
+
+  :focus-visible{
+    outline:2px solid var(--accent);
+    outline-offset:3px;
+  }
+
+  /* ---------- layout helpers ---------- */
+  .wrap{
+    max-width:1100px;
+    margin:0 auto;
+    padding:0 24px;
+  }
+
+  /* ---------- ambient dashboard ticks (signature texture) ---------- */
+  .tickline{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    height:14px;
+    overflow:hidden;
+  }
+  .tickline span{
+    flex:0 0 2px;
+    height:100%;
+    background:var(--line);
+  }
+  .tickline span:nth-child(5n){height:100%; background:var(--muted);}
+
+  /* ---------- header ---------- */
+  header{
+    position:sticky;
+    top:0;
+    z-index:50;
+    background:rgba(10,11,13,0.85);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:16px 24px;
+  }
+  .brand{
+    font-family:'Rajdhani', sans-serif;
+    font-weight:700;
+    font-size:1.1rem;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .brand .dot{
+    width:9px;height:9px;border-radius:50%;
+    background:var(--accent);
+    box-shadow:0 0 10px var(--accent);
+  }
+  .nav-meta{
+    font-family:'JetBrains Mono', monospace;
+    font-size:0.72rem;
+    color:var(--muted);
+    letter-spacing:0.05em;
+  }
+
+  /* ---------- hero ---------- */
+  .hero{
+    position:relative;
+    padding:88px 0 64px;
+    overflow:hidden;
+    border-bottom:1px solid var(--line);
+  }
+  .hero-grid{
+    display:grid;
+    grid-template-columns:1.3fr 0.9fr;
+    gap:48px;
+    align-items:center;
+  }
+  .eyebrow{
+    font-family:'JetBrains Mono', monospace;
+    font-size:0.78rem;
+    color:var(--accent);
+    letter-spacing:0.18em;
+    margin-bottom:18px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .eyebrow::before{
+    content:'';
+    width:24px;height:1px;
+    background:var(--accent);
+  }
+  .hero h1{
+    font-size:clamp(2.6rem, 6vw, 4.6rem);
+    font-weight:700;
+    line-height:0.98;
+    color:var(--text);
+  }
+  .hero h1 em{
+    font-style:normal;
+    color:var(--accent);
+  }
+  .hero p{
+    margin-top:22px;
+    max-width:46ch;
+    color:var(--muted);
+    font-size:1.02rem;
+  }
+  .hero-stats{
+    display:flex;
+    gap:28px;
+    margin-top:36px;
+  }
+  .hero-stat .num{
+    font-family:'JetBrains Mono', monospace;
+    font-size:1.6rem;
+    font-weight:700;
+    color:var(--text);
+  }
+  .hero-stat .lbl{
+    font-size:0.68rem;
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    color:var(--muted);
+    margin-top:2px;
+  }
+
+  /* tachometer */
+  .gauge-wrap{
+    display:flex;
+    justify-content:center;
+  }
+  .gauge{
+    width:100%;
+    max-width:340px;
+  }
+  .gauge-needle{
+    transform-origin:170px 190px;
+    animation:sweep 2.4s cubic-bezier(.22,1,.36,1) 0.2s both;
+  }
+  @keyframes sweep{
+    0%{transform:rotate(-120deg);}
+    60%{transform:rotate(48deg);}
+    100%{transform:rotate(28deg);}
+  }
+  .gauge-readout{
+    font-family:'JetBrains Mono', monospace;
+    fill:var(--text);
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .gauge-needle{animation:none; transform:rotate(28deg);}
+  }
+
+  /* ---------- section labels ---------- */
+  .section-head{
+    padding:56px 0 28px;
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    gap:20px;
+    flex-wrap:wrap;
+  }
+  .section-head h2{
+    font-size:1.9rem;
+    font-weight:700;
+  }
+  .section-head .note{
+    font-family:'JetBrains Mono', monospace;
+    font-size:0.72rem;
+    color:var(--muted);
+    max-width:34ch;
+    text-align:right;
+  }
+
+  /* ---------- ranking list ---------- */
+  .board{
+    border-top:1px solid var(--line);
+  }
+  .car{
+    border-bottom:1px solid var(--line);
+    background:var(--surface);
+    transition:background 0.2s ease;
+  }
+  .car:hover{background:var(--surface-2);}
+
+  .car-row{
+    display:grid;
+    grid-template-columns:88px 1fr auto 28px;
+    align-items:center;
+    gap:20px;
+    padding:22px 24px;
+    cursor:pointer;
+    background:transparent;
+    border:none;
+    width:100%;
+    text-align:left;
+    color:inherit;
+    font-family:inherit;
+  }
+  .rank{
+    font-family:'JetBrains Mono', monospace;
+    font-size:2.1rem;
+    font-weight:700;
+    color:var(--line);
+    line-height:1;
+  }
+  .car:nth-child(1) .rank{color:var(--gold);}
+  .car:nth-child(2) .rank{color:#9aa0a6;}
+  .car:nth-child(3) .rank{color:#8a5a2b;}
+
+  .car-id .brand-name{
+    font-size:0.74rem;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--muted);
+  }
+  .car-id .model-name{
+    font-family:'Rajdhani', sans-serif;
+    font-size:1.5rem;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:0.01em;
+  }
+  .tag{
+    display:inline-block;
+    margin-top:6px;
+    font-family:'JetBrains Mono', monospace;
+    font-size:0.66rem;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:var(--accent);
+    border:1px solid var(--accent-dim);
+    padding:3px 8px;
+    border-radius:2px;
+  }
+
+  .quickspecs{
+    display:none;
+  }
+  .chevron{
+    width:14px;height:14px;
+    border-right:2px solid var(--muted);
+    border-bottom:2px solid var(--muted);
+    transform:rotate(45deg);
+    transition:transform 0.25s ease;
+    justify-self:end;
+  }
+  .car.open .chevron{transform:rotate(-135deg);}
+
+  .car-detail{
+    max-height:0;
+    overflow:hidden;
+    transition:max-height 0.35s ease;
+  }
+  .car.open .car-detail{max-height:340px;}
+
+  .car-detail-inner{
+    padding:0 24px 28px;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:28px;
+  }
+  @media (max-width:640px){
+    .car-detail-inner{grid-template-columns:1fr;}
+  }
+
+  .car-desc{
+    color:var(--muted);
+    font-size:0.94rem;
+    max-width:52ch;
+  }
+
+  .specs{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:14px;
+  }
+  .spec{
+    border-left:2px solid var(--line);
+    padding-left:10px;
+  }
+  .spec .v{
+    font-family:'JetBrains Mono', monospace;
+    font-size:1.15rem;
+    font-weight:700;
+    color:var(--text);
+  }
+  .spec .k{
+    font-size:0.62rem;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:var(--muted);
+    margin-top:2px;
+  }
+
+  /* ---------- footer ---------- */
+  footer{
+    border-top:1px solid var(--line);
+    padding:40px 0 60px;
+    margin-top:40px;
+  }
+  footer .wrap{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:16px;
+  }
+  footer p{
+    font-family:'JetBrains Mono', monospace;
+    font-size:0.72rem;
+    color:var(--muted);
+  }
+
+  @media (max-width:820px){
+    .hero-grid{grid-template-columns:1fr; gap:36px;}
+    .gauge-wrap{order:-1; max-width:220px; margin:0 auto;}
+    .car-row{grid-template-columns:56px 1fr 22px;}
+    .car-row > .chevron{grid-column:3;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="nav wrap">
+    <div class="brand"><span class="dot"></span>Autos&nbsp;Cúspide</div>
+    <div class="nav-meta">RANKING · 10 UNIDADES · EDICIÓN 2026</div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="eyebrow">TABLERO DE VELOCIDAD</div>
+      <h1>Los <em>diez</em><br>autos más<br>extraordinarios<br>del mundo</h1>
+      <p>Una selección de las máquinas que redefinieron lo que un automóvil puede hacer: potencia bruta, ingeniería de precisión y diseño que se volvió leyenda.</p>
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <div class="num">490</div>
+          <div class="lbl">km/h máx. en la lista</div>
+        </div>
+        <div class="hero-stat">
+          <div class="num">1.85</div>
+          <div class="lbl">seg. 0–100 más rápido</div>
+        </div>
+        <div class="hero-stat">
+          <div class="num">1600+</div>
+          <div class="lbl">CV en el top 1</div>
+        </div>
+      </div>
+    </div>
+    <div class="gauge-wrap">
+      <svg class="gauge" viewBox="0 0 340 220" xmlns="http://www.w3.org/2000/svg">
+        <path d="M 40 190 A 130 130 0 0 1 300 190" fill="none" stroke="#2A2D33" stroke-width="10" stroke-linecap="round"/>
+        <path d="M 40 190 A 130 130 0 0 1 300 190" fill="none" stroke="#E10600" stroke-width="10" stroke-linecap="round"
+              stroke-dasharray="330" stroke-dashoffset="60"/>
+        <g class="mono" font-size="10" fill="#82888E">
+          <text x="30" y="205">0</text>
+          <text x="90" y="90">100</text>
+          <text x="163" y="55">200</text>
+          <text x="240" y="90">300</text>
+          <text x="290" y="205">400+</text>
+        </g>
+        <g class="gauge-needle">
+          <line x1="170" y1="190" x2="170" y2="70" stroke="#EDEBE6" stroke-width="4" stroke-linecap="round"/>
+          <circle cx="170" cy="190" r="9" fill="#E10600"/>
+        </g>
+        <text x="170" y="150" text-anchor="middle" class="gauge-readout" font-size="26" font-weight="700">km/h</text>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<div class="wrap">
+  <div class="section-head">
+    <h2>El ranking</h2>
+    <div class="note">Toca cada fila para ver ficha técnica completa. Cifras aproximadas del fabricante.</div>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="board" id="board"></div>
+</div>
+
+<footer>
+  <div class="wrap">
+    <p>AUTOS CÚSPIDE — LISTA EDITORIAL, NO AFILIADA A NINGÚN FABRICANTE</p>
+    <p>DATOS APROXIMADOS · SUJETOS A CAMBIO SEGÚN VERSIÓN Y MERCADO</p>
+  </div>
+</footer>
+
+<script>
+const cars = [
+  {
+    brand: "Bugatti", model: "Chiron Super Sport 300+", tag: "Velocidad máxima",
+    desc: "Concebido con un único objetivo: romper la barrera de los 300 mph de forma sostenida. Su W16 cuatriturbo convierte cada dato técnico en un récord.",
+    specs: [["1600 CV","Potencia"],["1.85 s","0–100 km/h"],["490 km/h","Vel. máxima"],["8.0L W16","Motor"],["1995 kg","Peso"],["4","Turbos"]]
+  },
+  {
+    brand: "Ferrari", model: "SF90 Stradale", tag: "Híbrido de pista",
+    desc: "El primer Ferrari híbrido enchufable de calle. Tres motores eléctricos más un V8 biturbo entregan tracción total y una respuesta casi instantánea.",
+    specs: [["1000 CV","Potencia"],["2.5 s","0–100 km/h"],["340 km/h","Vel. máxima"],["4.0L V8+3 motores","Motor"],["1570 kg","Peso"],["8vel.","Transmisión"]]
+  },
+  {
+    brand: "Koenigsegg", model: "Jesko Absolut", tag: "Aerodinámica extrema",
+    desc: "Diseñado por Koenigsegg puramente para velocidad terminal, sin el gran alerón de sus hermanos. Su caja Light Speed Transmission cambia de marcha en milisegundos.",
+    specs: [["1600 CV","Potencia (E85)"],["2.5 s","0–100 km/h"],["480+ km/h","Vel. estimada"],["5.0L V8","Motor"],["1320 kg","Peso"],["9vel. LST","Transmisión"]]
+  },
+  {
+    brand: "McLaren", model: "P1", tag: "Icono híbrido",
+    desc: "Junto al Ferrari LaFerrari y el Porsche 918, formó la trinidad híbrida que cambió la percepción de los superdeportivos para siempre.",
+    specs: [["916 CV","Potencia"],["2.8 s","0–100 km/h"],["350 km/h","Vel. máxima"],["3.8L V8+motor eléc.","Motor"],["1395 kg","Peso"],["IHOC","Suspensión"]]
+  },
+  {
+    brand: "Porsche", model: "911 GT3 RS", tag: "Pureza atmosférica",
+    desc: "Sin turbos, sin híbridos: un bóxer de altas revoluciones y un paquete aerodinámico prestado de la competición. El favorito de los puristas.",
+    specs: [["525 CV","Potencia"],["3.2 s","0–100 km/h"],["296 km/h","Vel. máxima"],["4.0L Bóxer 6","Motor"],["1450 kg","Peso"],["9000","RPM máx."]]
+  },
+  {
+    brand: "Lamborghini", model: "Revuelto", tag: "V12 reinventado",
+    desc: "El primer Lamborghini híbrido de serie combina un V12 atmosférico con tres motores eléctricos, heredando el carácter del V12 con la eficiencia del futuro.",
+    specs: [["1015 CV","Potencia"],["2.5 s","0–100 km/h"],["350 km/h","Vel. máxima"],["6.5L V12+3 motores","Motor"],["1772 kg","Peso"],["8vel. DCT","Transmisión"]]
+  },
+  {
+    brand: "Pagani", model: "Huayra", tag: "Arte y mecánica",
+    desc: "Cada componente, desde los pistones de titanio hasta las palancas de cambio, está tratado como una escultura funcional. Un V12 Mercedes-AMG le da voz.",
+    specs: [["730 CV","Potencia"],["3.2 s","0–100 km/h"],["370 km/h","Vel. máxima"],["6.0L V12 biturbo","Motor"],["1350 kg","Peso"],["Carbotitanio","Chasis"]]
+  },
+  {
+    brand: "Rimac", model: "Nevera", tag: "Eléctrico absoluto",
+    desc: "Cuatro motores eléctricos independientes, uno por rueda, entregan una aceleración que ningún motor de combustión ha igualado hasta ahora.",
+    specs: [["1914 CV","Potencia"],["1.85 s","0–100 km/h"],["412 km/h","Vel. máxima"],["4 motores eléc.","Motor"],["2150 kg","Peso"],["120 kWh","Batería"]]
+  },
+  {
+    brand: "Aston Martin", model: "Valkyrie", tag: "Fórmula 1 con matrícula",
+    desc: "Desarrollado con Red Bull Racing, su V12 gira a 11,100 RPM y su piso genera carga aerodinámica comparable a la de un monoplaza.",
+    specs: [["1140 CV","Potencia"],["2.5 s","0–100 km/h"],["350+ km/h","Vel. máxima"],["6.5L V12+motor eléc.","Motor"],["1030 kg","Peso"],["11100","RPM máx."]]
+  },
+  {
+    brand: "Tesla", model: "Model S Plaid", tag: "Aceleración de producción",
+    desc: "Sin motor de combustión, sin escape, sin cambios de marcha audibles: solo tres motores eléctricos entregando una de las aceleraciones de serie más rápidas jamás medidas.",
+    specs: [["1020 CV","Potencia"],["2.1 s","0–100 km/h"],["322 km/h","Vel. máxima"],["3 motores eléc.","Motor"],["2162 kg","Peso"],["396 km","Autonomía*"]]
+  }
+];
+
+const board = document.getElementById('board');
+
+cars.forEach((car, i) => {
+  const el = document.createElement('article');
+  el.className = 'car';
+
+  const rankNum = String(i + 1).padStart(2, '0');
+
+  el.innerHTML = `
+    <button class="car-row" aria-expanded="false">
+      <div class="rank mono">${rankNum}</div>
+      <div class="car-id">
+        <div class="brand-name">${car.brand}</div>
+        <div class="model-name">${car.model}</div>
+        <span class="tag">${car.tag}</span>
+      </div>
+      <div class="quickspecs"></div>
+      <div class="chevron"></div>
+    </button>
+    <div class="car-detail">
+      <div class="car-detail-inner">
+        <p class="car-desc">${car.desc}</p>
+        <div class="specs">
+          ${car.specs.map(s => `<div class="spec"><div class="v mono">${s[0]}</div><div class="k">${s[1]}</div></div>`).join('')}
+        </div>
+      </div>
+    </div>
+  `;
+
+  const btn = el.querySelector('.car-row');
+  btn.addEventListener('click', () => {
+    const isOpen = el.classList.contains('open');
+    document.querySelectorAll('.car.open').forEach(c => {
+      if (c !== el){ c.classList.remove('open'); c.querySelector('.car-row').setAttribute('aria-expanded','false'); }
+    });
+    el.classList.toggle('open', !isOpen);
+    btn.setAttribute('aria-expanded', String(!isOpen));
+  });
+
+  board.appendChild(el);
+});
+</script>
+
+</body>
+</html>
